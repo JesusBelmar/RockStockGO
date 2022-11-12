@@ -1,0 +1,34 @@
+version: "3.9"
+services:
+  db:
+    image: mongo
+    container_name: rockstock-mongo
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=rockstock
+      - MONGO_INITDB_ROOT_PASSWORD=rockstock.123
+    networks:
+      - rockstock-net
+    volumes:
+      - /Users/jesusbelmar/data/mongodb/database:/data/db
+  web:
+    build: .
+    container_name: "rockstock-api"
+    environment:
+      MONGODB_URI: mongodb://rockpub:rockpub.123@rockstock-mongo:27017/
+      DB_USER: rockstock
+      DB_PASS: rockstock.123
+    ports:
+      - "12345:12345"
+    depends_on:
+      - db
+    networks:
+      - rockstock-net
+volumes:
+  database:
+
+
+networks:
+  rockstock-net:
+    driver: bridge
